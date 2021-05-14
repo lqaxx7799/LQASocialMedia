@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imgProfilePicture"
+            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+            android:strokeWidth="1"
+            android:layout_height="40dp"
+            android:layout_width="40dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/photo_01"/>
+        <TextView
+            android:id="@+id/lblUserName"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/titleLevel1"
+            android:text="qanh99"/>
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/imgThumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/photo_01"
+        android:adjustViewBounds="true" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <ImageView
+            android:id="@+id/btnLike"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_baseline_thumb_up_24"/>
+        <ImageView
+            android:id="@+id/btnComment"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_baseline_comment_24"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <TextView
+            android:id="@+id/lblCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="This is a this picture with very long caption that require two lines."
+            style="@style/textContent" />
+    </LinearLayout>
+</LinearLayout>

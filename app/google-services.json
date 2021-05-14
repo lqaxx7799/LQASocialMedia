@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "232950116860",
+    "project_id": "lqa-social-media",
+    "storage_bucket": "lqa-social-media.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:232950116860:android:645efaea9b8edb8d598279",
+        "android_client_info": {
+          "package_name": "com.example.lqasocialmedia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "232950116860-58fv6onr0p1dsm9m6brv6tgrm09irg98.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB36A7bnHdm2Y5MCvxbLy1EL_JXgqv4eWA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "232950116860-58fv6onr0p1dsm9m6brv6tgrm09irg98.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
