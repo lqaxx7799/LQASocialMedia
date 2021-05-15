@@ -19,4 +19,13 @@ public class Session {
         String token = prefs.getString("token", "");
         return token;
     }
+
+    public void setAccountId(int accountId) {
+        prefs.edit().putInt("accountId", accountId).commit();
+    }
+
+    public int getAccountId() {
+        int accountId = prefs.getInt("accountId", 0);
+        return accountId;
+    }
 }

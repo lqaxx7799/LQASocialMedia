@@ -1,14 +1,34 @@
 package com.example.lqasocialmedia.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 public class Post {
+    @SerializedName("id")
     private int id;
+    @SerializedName("thumbnailUrl")
     private String thumbnailUrl;
+    @SerializedName("caption")
     private String caption;
+    @SerializedName("isDeleted")
     private boolean isDeleted;
-    private String userId;
-    private Date createdAt;
+    @SerializedName("account")
+    private Account account;
+    @SerializedName("createdTime")
+    private Date createdTime;
+
+    public Post() {
+    }
+
+    public Post(int id, String thumbnailUrl, String caption, boolean isDeleted, Account account, Date createdTime) {
+        this.id = id;
+        this.thumbnailUrl = thumbnailUrl;
+        this.caption = caption;
+        this.isDeleted = isDeleted;
+        this.account = account;
+        this.createdTime = createdTime;
+    }
 
     public int getId() {
         return id;
@@ -42,19 +62,19 @@ public class Post {
         isDeleted = deleted;
     }
 
-    public String getUserId() {
-        return userId;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setAccountId(Account account) {
+        this.account = account;
     }
 
     public Date getCreatedAt() {
-        return createdAt;
+        return createdTime;
     }
 
     public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+        this.createdTime = createdAt;
     }
 }

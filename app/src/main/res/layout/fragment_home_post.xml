@@ -16,14 +16,6 @@
           android:layout_height="wrap_content"
           android:clipToPadding="false"
           android:paddingBottom="60dp" />
-      <ProgressBar
-          android:id="@+id/loadingPost"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center_horizontal"
-          android:indeterminate="true"
-          android:clipToPadding="false"
-          android:paddingBottom="60dp" />
    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

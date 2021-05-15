@@ -5,64 +5,91 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.paging.PagedList;
-import androidx.paging.PagedListAdapter;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.lqasocialmedia.R;
 import com.example.lqasocialmedia.model.Post;
-import com.example.lqasocialmedia.repository.NetworkState;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostRecyclerViewAdapter extends PagedListAdapter<Post, PostRecyclerViewAdapter.PostViewHolder> {
-//    private List<Post> data;
+public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public List<Post> data;
     private Activity activity;
     private static final String TAG = "PostRecyclerViewAdapter";
-    private NetworkState networkState;
+    private final int VIEW_TYPE_ITEM = 0;
+    private final int VIEW_TYPE_LOADING = 1;
 
-    public PostRecyclerViewAdapter(Activity activity) {
-        super(DIFF_CALLBACK);
+    public PostRecyclerViewAdapter(Activity activity, List<Post> data) {
         this.activity = activity;
+        this.data = data;
     }
 
 //    public void setData(List<Post> data) {
 //        this.data = data;
 //        notifyDataSetChanged();
 //    }
-
+//
 //    public void appendData(List<Post> newData) {
-//        this.data.addAll(newData);
-//        notifyDataSetChanged();
-////        submitList(newData);
+//        if (this.data == null) {
+//            setData(newData);
+//        } else {
+//            this.data.addAll(newData);
+//            notifyDataSetChanged();
+//        }
 //    }
 
     @NonNull
     @Override
-    public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View v = inflater.inflate(R.layout.post_list_item, parent, false);
-        return new PostViewHolder(v);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_ITEM) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            View v = inflater.inflate(R.layout.post_list_item, parent, false);
+            return new PostViewHolder(v);
+        } else {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            View v = inflater.inflate(R.layout.post_list_loading, parent, false);
+            return new LoadingViewHolder(v);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
-        Post post = getItem(position);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof PostViewHolder) {
+            bindPostViewHolder((PostViewHolder) holder, position);
+        } else if (holder instanceof  LoadingViewHolder) {
+            showLoadingView((LoadingViewHolder) holder, position);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        if (this.data == null) {
+            return 0;
+        }
+        return this.data.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return data.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+    }
+
+    private void bindPostViewHolder(PostViewHolder holder, int position) {
+        Post post = this.data.get(position);
         if (post == null) {
             return;
         }
 
-        Glide.with(this.activity).load(post.getThumbnailUrl()).into(holder.imgProfilePicture);
-        holder.lblUserName.setText(post.getUserId());
+        Glide.with(this.activity).load(post.getAccount().getProfilePictureUrl()).into(holder.imgProfilePicture);
+        holder.lblUserName.setText(post.getAccount().getUserName());
         Glide.with(this.activity).load(post.getThumbnailUrl()).into(holder.imgThumbnail);
         holder.lblCaption.setText(post.getCaption());
 //        if (post.isLiked()) {
@@ -91,39 +118,12 @@ public class PostRecyclerViewAdapter extends PagedListAdapter<Post, PostRecycler
         });
     }
 
-//    @Override
-//    public int getItemCount() {
-//        if (this.data == null) {
-//            return 0;
-//        }
-//        return this.data.size();
-//    }
-
-    private boolean hasExtraRow() {
-        if (networkState != null && networkState != NetworkState.LOADED) {
-            return true;
-        } else {
-            return false;
-        }
+    private void showLoadingView(LoadingViewHolder holder, int position) {
+        //ProgressBar would be displayed
+//        holder.progressBar.setVisibility(View.VISIBLE);
     }
 
-    public void setNetworkState(NetworkState newNetworkState) {
-        this.networkState = newNetworkState;
-    }
-
-    public static final DiffUtil.ItemCallback<Post> DIFF_CALLBACK =
-            new DiffUtil.ItemCallback<Post>() {
-                @Override
-                public boolean areItemsTheSame(Post oldItem, Post newItem) {
-                    return oldItem.getId() == newItem.getId();
-                }
-                @Override
-                public boolean areContentsTheSame(Post oldItem, Post newItem) {
-                    return oldItem.equals(newItem);
-                }
-            };
-
-    public class PostViewHolder extends RecyclerView.ViewHolder {
+    private class PostViewHolder extends RecyclerView.ViewHolder {
         private ShapeableImageView imgProfilePicture;
         private TextView lblUserName;
         private ImageView imgThumbnail;
@@ -139,6 +139,15 @@ public class PostRecyclerViewAdapter extends PagedListAdapter<Post, PostRecycler
             btnLike = itemView.findViewById(R.id.btnLike);
             btnComment = itemView.findViewById(R.id.btnComment);
             lblCaption = itemView.findViewById(R.id.lblCaption);
+        }
+    }
+
+    public class LoadingViewHolder extends RecyclerView.ViewHolder {
+        ProgressBar progressBar;
+
+        public LoadingViewHolder(@NonNull View itemView) {
+            super(itemView);
+            progressBar = itemView.findViewById(R.id.postListProgressBar);
         }
     }
 }

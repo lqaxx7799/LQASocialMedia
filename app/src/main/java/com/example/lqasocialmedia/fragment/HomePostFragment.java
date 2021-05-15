@@ -2,12 +2,14 @@ package com.example.lqasocialmedia.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,23 +17,36 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.lqasocialmedia.R;
+import com.example.lqasocialmedia.Session;
 import com.example.lqasocialmedia.adapter.PostRecyclerViewAdapter;
-import com.example.lqasocialmedia.viewmodel.PostViewModel;
+import com.example.lqasocialmedia.model.Post;
+import com.example.lqasocialmedia.network.NetworkProvider;
+import com.example.lqasocialmedia.network.SocialMediaService;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class HomePostFragment extends Fragment {
     public static final String TAG = "HomePostFragment";
-    private ProgressBar loadingPost;
     private SwipeRefreshLayout swipeContainer;
     private RecyclerView postRecyclerView;
     private LinearLayoutManager postLayoutManager;
     private PostRecyclerViewAdapter postRecyclerViewAdapter;
     private View v;
+    private SocialMediaService socialMediaService;
+    private Session session;
 
-    private PostViewModel viewModel;
+    private List<Post> data;
+
+    private boolean isLoading = false;
+    private int currentPage = 0;
+    private boolean isLastPage = false;
 
     public HomePostFragment() {
     }
@@ -47,93 +62,108 @@ public class HomePostFragment extends Fragment {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_home_post, container, false);
 
-        loadingPost = v.findViewById(R.id.loadingPost);
+        initView();
 
-        postRecyclerView = v.findViewById(R.id.postRecyclerView);
+        data = new ArrayList<>();
+
         postLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         postRecyclerView.setLayoutManager(postLayoutManager);
 
-        postRecyclerViewAdapter = new PostRecyclerViewAdapter(getActivity());
+        postRecyclerViewAdapter = new PostRecyclerViewAdapter(getActivity(), data);
         postRecyclerView.setAdapter(postRecyclerViewAdapter);
 
-        viewModel = ViewModelProviders.of(this).get(PostViewModel.class);
-        viewModel.posts.observe(this, pagedList -> {
-            postRecyclerViewAdapter.submitList(pagedList);
-        });
-        viewModel.networkState.observe(this, networkState -> {
-            postRecyclerViewAdapter.setNetworkState(networkState);
-            Log.d(TAG, "Network State Change");
-        });
+        socialMediaService = NetworkProvider.getInstance().getRetrofit().create(SocialMediaService.class);
 
+        session = new Session(getContext());
 
-
-//        viewModel.getPagedListObservable().subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(pagedList -> postRecyclerViewAdapter.submitList(pagedList));
-
-//        postRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                if (loadingPost.getVisibility() == View.VISIBLE) {
-//                    return;
-//                }
-//                if (!recyclerView.canScrollVertically(1)) { //1 for down
-//                    loadingPost.setVisibility(View.VISIBLE);
-////                    postLayoutManager.scrollToPosition(postRecyclerViewAdapter.getItemCount());
-//                    new android.os.Handler(Looper.getMainLooper()).postDelayed(
-//                            new Runnable() {
-//                                public void run() {
-//                                    postRecyclerViewAdapter.appendData(getData());
-//                                    loadingPost.setVisibility(View.GONE);
-//                                }
-//                            },
-//                            2000
-//                    );
-//                }
-//            }
-//        });
-
-//        swipeContainer = v.findViewById(R.id.swipeContainer);
-//        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-//                android.R.color.holo_green_light,
-//                android.R.color.holo_orange_light,
-//                android.R.color.holo_red_light);
-//        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                new android.os.Handler(Looper.getMainLooper()).postDelayed(
-//                        new Runnable() {
-//                            public void run() {
-//                                List<Post> data = getData();
-//                                postRecyclerViewAdapter.setData(data);
-//                                swipeContainer.setRefreshing(false);
-//                            }
-//                        },
-//                        1000
-//                );
-//            }
-//        });
-
-//        new android.os.Handler(Looper.getMainLooper()).postDelayed(
-//                new Runnable() {
-//                    public void run() {
-//                        List<Post> data = getData();
-//                        postRecyclerViewAdapter.setData(data);
-//                        loadingPost.setVisibility(View.GONE);
-//                    }
-//                },
-//                1000
-//        );
+        initData();
+        initScrollListener();
+        initRefreshListener();
 
         return v;
     }
 
-//    private List<Post> getData() {
+    private void initData() {
+        loadFeed();
+    }
+
+    private void initScrollListener() {
+        postRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (isLastPage) {
+                    return;
+                }
+
+                if (!isLoading) {
+                    if (postLayoutManager.findLastCompletelyVisibleItemPosition() == data.size() - 1) {
+                        //bottom of list!
+                        currentPage += 1;
+                        loadFeed();
+                    }
+                }
+            }
+        });
+    }
+
+    private void initRefreshListener() {
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // reset state
+                initData();
+            }
+        });
+    }
+
+    private void initView() {
+        postRecyclerView = v.findViewById(R.id.postRecyclerView);
+        swipeContainer = v.findViewById(R.id.swipeContainer);
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+    }
+
+    private void loadFeed() {
+        isLoading = true;
+        data.add(null);
+        postRecyclerViewAdapter.notifyItemInserted(data.size() - 1);
+
+        socialMediaService.getFeed(session.getAccountId(), currentPage)
+                .enqueue(new Callback<List<Post>>() {
+                    @Override
+                    public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+                        data.remove(data.size() - 1);
+                        int scrollPosition = data.size();
+                        postRecyclerViewAdapter.notifyItemRemoved(scrollPosition);
+
+                        isLoading = false;
+                        swipeContainer.setRefreshing(false);
+
+                        if (response.body() == null || response.body().isEmpty()) {
+                            isLastPage = true;
+                        } else {
+                            data.addAll(response.body());
+                            postRecyclerViewAdapter.notifyDataSetChanged();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<List<Post>> call, Throwable t) {
+                        Log.i("LOAD ERROR", "Error at page " + currentPage + ", " + t.getMessage());
+                        data.remove(data.size() - 1);
+                        int scrollPosition = data.size();
+                        postRecyclerViewAdapter.notifyItemRemoved(scrollPosition);;
+                        isLoading = false;
+                    }
+                });
+
+        // int id, String thumbnailUrl, String caption, boolean isDeleted, int accountId, Date createdAt
 //        List<Post> data = new ArrayList<>();
-//        data.add(new Post(1, 1, "https://www.w3schools.com/howto/img_avatar.png", "qanh99", "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg", true, "This a caption"));
-//        data.add(new Post(1, 1, "https://www.w3schools.com/howto/img_avatar.png", "qanh99", "https://lokeshdhakar.com/projects/lightbox2/images/image-3.jpg", true, "This a caption"));
-//        data.add(new Post(1, 1, "https://www.w3schools.com/howto/img_avatar.png", "qanh99", "https://cdn.wallpapersafari.com/38/45/KftFVL.jpg", true, "This a caption"));
+//        data.add(new Post(1, "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg", "This a caption", false, 1, new Date()));
+//        data.add(new Post(2, "https://lokeshdhakar.com/projects/lightbox2/images/image-3.jpg", "This is a caption", true, 1, new Date()));
+//        data.add(new Post(3, "https://cdn.wallpapersafari.com/38/45/KftFVL.jpg", "This a caption", true, 1, new Date()));
 //        return data;
-//    }
+    }
 }
