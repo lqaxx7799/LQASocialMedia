@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.paging.ItemKeyedDataSource;
 
 import com.example.lqasocialmedia.model.Post;
+import com.example.lqasocialmedia.repository.NetworkState;
+import com.example.lqasocialmedia.repository.Status;
 import com.example.lqasocialmedia.service.SocialMediaApi;
 import com.example.lqasocialmedia.service.SocialMediaService;
 
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ItemKeyedFeedDataSource extends ItemKeyedDataSource<Integer, Post> {
@@ -49,7 +52,7 @@ public class ItemKeyedFeedDataSource extends ItemKeyedDataSource<Integer, Post> 
         initialParams = params;
         initialLoading.postValue(NetworkState.LOADING);
         networkState.postValue(NetworkState.LOADING);
-        socialMediaService.getFeed(1, params.requestedLoadSize).enqueue(new Callback<List<Post>>() {
+        socialMediaService.getFeed(1, 1).enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
                 if (response.isSuccessful() && response.code() == 200) {
@@ -85,7 +88,7 @@ public class ItemKeyedFeedDataSource extends ItemKeyedDataSource<Integer, Post> 
         afterParams = params;
 
         networkState.postValue(NetworkState.LOADING);
-        socialMediaService.getUser(params.key, params.requestedLoadSize).enqueue(new Callback<List<User>>() {
+        socialMediaService.getFeed(1, params.key).enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
                 if (response.isSuccessful()) {

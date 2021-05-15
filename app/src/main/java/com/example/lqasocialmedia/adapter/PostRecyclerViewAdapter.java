@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.lqasocialmedia.R;
 import com.example.lqasocialmedia.model.Post;
+import com.example.lqasocialmedia.repository.NetworkState;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ import java.util.List;
 public class PostRecyclerViewAdapter extends PagedListAdapter<Post, PostRecyclerViewAdapter.PostViewHolder> {
 //    private List<Post> data;
     private Activity activity;
+    private static final String TAG = "PostRecyclerViewAdapter";
+    private NetworkState networkState;
 
     public PostRecyclerViewAdapter(Activity activity) {
         super(DIFF_CALLBACK);
@@ -95,6 +98,18 @@ public class PostRecyclerViewAdapter extends PagedListAdapter<Post, PostRecycler
 //        }
 //        return this.data.size();
 //    }
+
+    private boolean hasExtraRow() {
+        if (networkState != null && networkState != NetworkState.LOADED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void setNetworkState(NetworkState newNetworkState) {
+        this.networkState = newNetworkState;
+    }
 
     public static final DiffUtil.ItemCallback<Post> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<Post>() {

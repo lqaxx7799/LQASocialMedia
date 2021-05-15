@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +16,14 @@ import android.widget.ProgressBar;
 
 import com.example.lqasocialmedia.R;
 import com.example.lqasocialmedia.adapter.PostRecyclerViewAdapter;
+import com.example.lqasocialmedia.viewmodel.PostViewModel;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 
 public class HomePostFragment extends Fragment {
+    public static final String TAG = "HomePostFragment";
     private ProgressBar loadingPost;
     private SwipeRefreshLayout swipeContainer;
     private RecyclerView postRecyclerView;
@@ -44,8 +47,6 @@ public class HomePostFragment extends Fragment {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_home_post, container, false);
 
-        viewModel = ViewModelProviders.of(this).get(PostViewModel.class);
-
         loadingPost = v.findViewById(R.id.loadingPost);
 
         postRecyclerView = v.findViewById(R.id.postRecyclerView);
@@ -55,9 +56,20 @@ public class HomePostFragment extends Fragment {
         postRecyclerViewAdapter = new PostRecyclerViewAdapter(getActivity());
         postRecyclerView.setAdapter(postRecyclerViewAdapter);
 
-        viewModel.getPagedListObservable().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(pagedList -> postRecyclerViewAdapter.submitList(pagedList));
+        viewModel = ViewModelProviders.of(this).get(PostViewModel.class);
+        viewModel.posts.observe(this, pagedList -> {
+            postRecyclerViewAdapter.submitList(pagedList);
+        });
+        viewModel.networkState.observe(this, networkState -> {
+            postRecyclerViewAdapter.setNetworkState(networkState);
+            Log.d(TAG, "Network State Change");
+        });
+
+
+
+//        viewModel.getPagedListObservable().subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(pagedList -> postRecyclerViewAdapter.submitList(pagedList));
 
 //        postRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 //            @Override
