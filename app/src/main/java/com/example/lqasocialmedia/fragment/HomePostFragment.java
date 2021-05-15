@@ -1,33 +1,20 @@
 package com.example.lqasocialmedia.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.lqasocialmedia.R;
-import com.example.lqasocialmedia.activity.HomeActivity;
-import com.example.lqasocialmedia.activity.LogInActivity;
-import com.example.lqasocialmedia.activity.SplashActivity;
 import com.example.lqasocialmedia.adapter.PostRecyclerViewAdapter;
-import com.example.lqasocialmedia.viewmodel.Post;
-import com.example.lqasocialmedia.viewmodel.PostViewModel;
-
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;

@@ -3,18 +3,18 @@ package com.example.lqasocialmedia.model;
 import java.util.Date;
 
 public class Post {
-    private String id;
+    private int id;
     private String thumbnailUrl;
     private String caption;
     private boolean isDeleted;
     private String userId;
     private Date createdAt;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
