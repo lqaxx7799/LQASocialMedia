@@ -1,21 +1,31 @@
 package com.example.lqasocialmedia.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Account {
+import java.io.Serializable;
+
+public class Account implements Serializable {
     @SerializedName("id")
+    @Expose
     private String id;
     @SerializedName("email")
+    @Expose
     private String email;
     @SerializedName("password")
+    @Expose
     private String password;
     @SerializedName("name")
+    @Expose
     private String name;
-    @SerializedName("userName")
+    @SerializedName("username")
+    @Expose
     private String userName;
     @SerializedName("bio")
+    @Expose
     private String bio;
     @SerializedName("profilePictureUrl")
+    @Expose
     private String profilePictureUrl;
 
     public String getId() {

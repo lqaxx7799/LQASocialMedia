@@ -1,6 +1,7 @@
 package com.example.lqasocialmedia.adapter;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,8 +88,12 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         if (post == null) {
             return;
         }
+        if (post.getAccount().getProfilePictureUrl() == null || post.getAccount().getProfilePictureUrl().equals("")) {
+            Glide.with(this.activity).load(activity.getResources().getString(R.string.default_profile_picture_url)).into(holder.imgProfilePicture);
+        } else {
+            Glide.with(this.activity).load(post.getAccount().getProfilePictureUrl()).into(holder.imgProfilePicture);
+        }
 
-        Glide.with(this.activity).load(post.getAccount().getProfilePictureUrl()).into(holder.imgProfilePicture);
         holder.lblUserName.setText(post.getAccount().getUserName());
         Glide.with(this.activity).load(post.getThumbnailUrl()).into(holder.imgThumbnail);
         holder.lblCaption.setText(post.getCaption());
