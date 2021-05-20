@@ -8,4 +8,6 @@
         <item>Female</item>
         <item>Other</item>
     </string-array>
+    <string name="internal_storage">Internal storage</string>
+    <string name="api_root">https://1a9ad5daee7a.ngrok.io</string>
 </resources>

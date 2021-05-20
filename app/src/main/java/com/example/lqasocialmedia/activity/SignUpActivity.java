@@ -11,7 +11,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.FileUtils;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +28,8 @@ import com.example.lqasocialmedia.dto.SignUpDTO;
 import com.example.lqasocialmedia.model.Account;
 import com.example.lqasocialmedia.network.NetworkProvider;
 import com.example.lqasocialmedia.network.SocialMediaService;
+import com.example.lqasocialmedia.util.FileUtils;
+import com.google.firebase.firestore.util.FileUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -56,6 +58,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     private Session session;
     private SocialMediaService socialMediaService;
+
+    private Uri profilePictureUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,23 +177,23 @@ public class SignUpActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Account> call, Throwable t) {
-
+                Log.i(LOG_TAG, "Error: " + t.getMessage());
             }
         });
     }
 
-    private static MultipartBody getSignUpRequestBody(SignUpDTO signUpDTO) {
+    private MultipartBody getSignUpRequestBody(SignUpDTO signUpDTO) {
         final MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM);
-
-        File profilePicture = new File(signUpDTO.getProfilePicture());
-        requestBodyBuilder.addFormDataPart(
-                "profilePicture",
-                profilePicture.getName(),
-                RequestBody.create(MediaType.parse("multipart/form-data"), profilePicture)
-        );
-
-        Log.i(LOG_TAG, "Size " + profilePicture.getName() + ": " + profilePicture.getTotalSpace());
+        if (!signUpDTO.getProfilePicture().equals("") && this.profilePictureUri != null) {
+            File profilePicture = FileUtils.getFile(this, profilePictureUri);
+            requestBodyBuilder.addFormDataPart(
+                    "profilePicture",
+                    profilePicture.getName(),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), profilePicture)
+            );
+            Log.i(LOG_TAG, "Size " + profilePicture.getName() + ": " + profilePicture.getTotalSpace());
+        }
 
         requestBodyBuilder.addFormDataPart(
                 "dateOfBirth",
@@ -308,21 +312,13 @@ public class SignUpActivity extends AppCompatActivity {
                 if (resultCode == Activity.RESULT_OK) {
                     if(data != null)  {
                         Uri fileUri = data.getData();
+                        this.profilePictureUri = fileUri;
                         Log.i(LOG_TAG, "Uri: " + fileUri);
 
                         String filePath = null;
                         try {
-                            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-                            Cursor cursor = getContentResolver().query(fileUri, filePathColumn, null, null, null);
-                            if(cursor.moveToFirst()){
-                                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                                filePath = cursor.getString(columnIndex);
-                                Log.i(LOG_TAG, "Path: " + filePath);
-                            } else {
-                                //boooo, cursor doesn't have rows ...
-                            }
-                            cursor.close();
-//                            filePath = fileUri.getPath(); // FileUtils.getPath(this, fileUri);
+                            filePath = fileUri.getPath();
+//                            filePath = getPath(fileUri); // FileUtils.getPath(this, fileUri);
                         } catch (Exception e) {
                             Log.e(LOG_TAG,"Error: " + e);
                             Toast.makeText(this, "Error: " + e, Toast.LENGTH_SHORT).show();
@@ -333,10 +329,6 @@ public class SignUpActivity extends AppCompatActivity {
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    public String getPath()  {
-        return this.txtProfilePicture.getText().toString();
     }
 
     private static Date stringToDate(String input) {
@@ -351,5 +343,24 @@ public class SignUpActivity extends AppCompatActivity {
     private static String dateToISOString(Date date) {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
         return df.format(date);
+    }
+
+    public String getPath(Uri uri) {
+
+        String path = null;
+        String[] projection = { MediaStore.Files.FileColumns.DATA };
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+
+        if(cursor == null) {
+            path = uri.getPath();
+        }
+        else{
+            cursor.moveToFirst();
+            int column_index = cursor.getColumnIndexOrThrow(projection[0]);
+            path = cursor.getString(column_index);
+            cursor.close();
+        }
+
+        return ((path == null || path.isEmpty()) ? (uri.getPath()) : path);
     }
 }

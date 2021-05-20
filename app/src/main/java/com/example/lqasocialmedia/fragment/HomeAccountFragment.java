@@ -110,7 +110,8 @@ public class HomeAccountFragment extends Fragment {
                 if (account.getProfilePictureUrl() == null || account.getProfilePictureUrl().equals("")) {
                     Glide.with(getActivity()).load(getResources().getString(R.string.default_profile_picture_url)).into(imgProfilePicture);
                 } else {
-                    Glide.with(getActivity()).load(account.getProfilePictureUrl()).into(imgProfilePicture);
+                    String profilePictureUrl = getResources().getString(R.string.api_root) + "/images/" + account.getProfilePictureUrl();
+                    Glide.with(getActivity()).load(profilePictureUrl).into(imgProfilePicture);
                 }
             }
 

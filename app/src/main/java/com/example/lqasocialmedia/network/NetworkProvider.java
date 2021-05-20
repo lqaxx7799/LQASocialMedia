@@ -11,7 +11,7 @@ public final class NetworkProvider {
     private Retrofit retrofit;
     private NetworkProvider() {
         retrofit = new Retrofit.Builder()
-                .baseUrl("https://482fe543077f.ngrok.io")
+                .baseUrl("https://1a9ad5daee7a.ngrok.io")
                 .client(new OkHttpClient.Builder().build())
                 .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().create()))
                 .build();
