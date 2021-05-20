@@ -27,7 +27,7 @@ public class LogInActivity extends AppCompatActivity {
 
     private EditText txtEmail, txtPassword;
     private TextView lblLogInError;
-    private Button btnLogIn;
+    private Button btnLogIn, btnSignUp;
 
     private SocialMediaService socialMediaService;
 
@@ -47,12 +47,21 @@ public class LogInActivity extends AppCompatActivity {
                 tryLogIn();
             }
         });
+
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LogInActivity.this, SignUpActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initView() {
         txtEmail = findViewById(R.id.txtEmail);
         txtPassword = findViewById(R.id.txtPassword);
         btnLogIn = findViewById(R.id.btnLogIn);
+        btnSignUp = findViewById(R.id.btnSignUp);
         lblLogInError = findViewById(R.id.lblLogInError);
 
         lblLogInError.setText("");

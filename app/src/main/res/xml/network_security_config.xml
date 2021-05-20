@@ -2,7 +2,7 @@
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">
-            https://8a0950d3b687.ngrok.io
+            https://482fe543077f.ngrok.io
         </domain>
     </domain-config>
 </network-security-config>

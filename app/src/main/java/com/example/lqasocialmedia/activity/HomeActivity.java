@@ -71,6 +71,7 @@ public class HomeActivity extends AppCompatActivity {
                 break;
             case R.id.homeOptionLogOut:
                 session.setToken("");
+                session.setAccountId(0);
                 Intent intent = new Intent(HomeActivity.this, LogInActivity.class);
                 startActivity(intent);
                 finish();
