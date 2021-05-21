@@ -1,5 +1,6 @@
 package com.example.lqasocialmedia.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,10 +19,12 @@ import android.widget.ProgressBar;
 
 import com.example.lqasocialmedia.R;
 import com.example.lqasocialmedia.Session;
+import com.example.lqasocialmedia.activity.CreatePostActivity;
 import com.example.lqasocialmedia.adapter.PostRecyclerViewAdapter;
 import com.example.lqasocialmedia.model.Post;
 import com.example.lqasocialmedia.network.NetworkProvider;
 import com.example.lqasocialmedia.network.SocialMediaService;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,6 +39,7 @@ public class HomePostFragment extends Fragment {
     public static final String TAG = "HomePostFragment";
     private SwipeRefreshLayout swipeContainer;
     private RecyclerView postRecyclerView;
+    private FloatingActionButton fabCreatePost;
     private LinearLayoutManager postLayoutManager;
     private PostRecyclerViewAdapter postRecyclerViewAdapter;
     private View v;
@@ -75,6 +79,14 @@ public class HomePostFragment extends Fragment {
         socialMediaService = NetworkProvider.getInstance().getRetrofit().create(SocialMediaService.class);
 
         session = new Session(getContext());
+
+        fabCreatePost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), CreatePostActivity.class);
+                startActivity(intent);
+            }
+        });
 
         initData();
         initScrollListener();
@@ -124,6 +136,7 @@ public class HomePostFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+        fabCreatePost = v.findViewById(R.id.fabCreatePost);
     }
 
     private void loadFeed() {

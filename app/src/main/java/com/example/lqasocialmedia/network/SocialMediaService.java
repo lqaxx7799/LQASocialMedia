@@ -39,4 +39,7 @@ public interface SocialMediaService {
 
     @POST("/authentication/signUp")
     Call<Account> signUp(@Body RequestBody data);
+
+    @POST("/post")
+    Call<Post> createPost(@Body RequestBody data);
 }

@@ -6,13 +6,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.example.lqasocialmedia.fragment.HomeAccountFragment;
-import com.example.lqasocialmedia.fragment.HomeAddFragment;
 import com.example.lqasocialmedia.fragment.HomeNotiFragment;
 import com.example.lqasocialmedia.fragment.HomePostFragment;
 import com.example.lqasocialmedia.fragment.HomeSearchFragment;
 
 public class HomeBottomNavigationAdapter extends FragmentStatePagerAdapter {
-    private int numberOfPages = 5;
+    private int numberOfPages = 4;
     public HomeBottomNavigationAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
     }
@@ -26,10 +25,8 @@ public class HomeBottomNavigationAdapter extends FragmentStatePagerAdapter {
             case 1:
                 return new HomeSearchFragment();
             case 2:
-                return new HomeAddFragment();
-            case 3:
                 return new HomeNotiFragment();
-            case 4:
+            case 3:
                 return new HomeAccountFragment();
         }
         return null;

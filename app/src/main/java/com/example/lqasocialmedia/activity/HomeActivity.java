@@ -43,14 +43,11 @@ public class HomeActivity extends AppCompatActivity {
                     case R.id.homeMenuSearch:
                         homePager.setCurrentItem(1);
                         break;
-                    case R.id.homeMenuAdd:
+                    case R.id.homeMenuNoti:
                         homePager.setCurrentItem(2);
                         break;
-                    case R.id.homeMenuNoti:
-                        homePager.setCurrentItem(3);
-                        break;
                     case R.id.homeMenuAccount:
-                        homePager.setCurrentItem(4);
+                        homePager.setCurrentItem(3);
                         break;
                 }
                 return true;
