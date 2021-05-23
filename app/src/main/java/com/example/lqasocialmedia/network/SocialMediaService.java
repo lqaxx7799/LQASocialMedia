@@ -31,6 +31,9 @@ public interface SocialMediaService {
     @GET("/accounts/followed/{id}")
     Call<List<Account>> getFollowed(@Path("id") int accountId);
 
+    @GET("/accounts/byName")
+    Call<List<Account>> getByName(@Query("name") String name);
+
     @GET("/posts/byAccount/{id}")
     Call<List<Post>> getPostsByAccountId(@Path("id") int accountId);
 
@@ -42,4 +45,10 @@ public interface SocialMediaService {
 
     @POST("/post")
     Call<Post> createPost(@Body RequestBody data);
+
+    @POST("/account/follow/{id}")
+    Call<Account> followAccount(@Path("id") int accountId, @Query("targetId") int targetId);
+
+    @POST("/account/unfollow/{id}")
+    Call<Account> unfollowAccount(@Path("id") int accountId, @Query("targetId") int targetId);
 }

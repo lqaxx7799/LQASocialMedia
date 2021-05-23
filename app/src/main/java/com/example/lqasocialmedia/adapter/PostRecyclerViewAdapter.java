@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.lqasocialmedia.R;
 import com.example.lqasocialmedia.model.Post;
+import com.example.lqasocialmedia.util.CommonUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
@@ -91,11 +92,11 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         if (post.getAccount().getProfilePictureUrl() == null || post.getAccount().getProfilePictureUrl().equals("")) {
             Glide.with(this.activity).load(activity.getResources().getString(R.string.default_profile_picture_url)).into(holder.imgProfilePicture);
         } else {
-            Glide.with(this.activity).load(post.getAccount().getProfilePictureUrl()).into(holder.imgProfilePicture);
+            Glide.with(this.activity).load(CommonUtils.getImageFullPath(post.getAccount().getProfilePictureUrl())).into(holder.imgProfilePicture);
         }
 
         holder.lblUserName.setText(post.getAccount().getUserName());
-        Glide.with(this.activity).load(post.getThumbnailUrl()).into(holder.imgThumbnail);
+        Glide.with(this.activity).load(CommonUtils.getImageFullPath(post.getThumbnailUrl())).into(holder.imgThumbnail);
         holder.lblCaption.setText(post.getCaption());
 //        if (post.isLiked()) {
 //            holder.btnLike.setColorFilter(activity.getResources().getColor(R.color.liked, activity.getTheme()));

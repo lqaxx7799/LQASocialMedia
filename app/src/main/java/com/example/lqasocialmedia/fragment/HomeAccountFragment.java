@@ -23,6 +23,7 @@ import com.example.lqasocialmedia.model.Account;
 import com.example.lqasocialmedia.model.Post;
 import com.example.lqasocialmedia.network.NetworkProvider;
 import com.example.lqasocialmedia.network.SocialMediaService;
+import com.example.lqasocialmedia.util.CommonUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.gson.Gson;
 
@@ -110,7 +111,7 @@ public class HomeAccountFragment extends Fragment {
                 if (account.getProfilePictureUrl() == null || account.getProfilePictureUrl().equals("")) {
                     Glide.with(getActivity()).load(getResources().getString(R.string.default_profile_picture_url)).into(imgProfilePicture);
                 } else {
-                    String profilePictureUrl = getResources().getString(R.string.api_root) + "/images/" + account.getProfilePictureUrl();
+                    String profilePictureUrl = CommonUtils.getImageFullPath(account.getProfilePictureUrl());
                     Glide.with(getActivity()).load(profilePictureUrl).into(imgProfilePicture);
                 }
             }

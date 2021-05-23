@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.lqasocialmedia.R;
 import com.example.lqasocialmedia.model.Post;
+import com.example.lqasocialmedia.util.CommonUtils;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class AccountPostGridAdapter extends RecyclerView.Adapter<AccountPostGrid
     @Override
     public void onBindViewHolder(@NonNull AccountPostViewHolder holder, int position) {
         Post post = this.data.get(position);
-        Glide.with(this.activity).load(post.getThumbnailUrl()).into(holder.imgGridThumbnail);
+        Glide.with(this.activity).load(CommonUtils.getImageFullPath(post.getThumbnailUrl())).into(holder.imgGridThumbnail);
         holder.imgGridThumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -150,7 +150,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void onResponse(Call<Account> call, Response<Account> response) {
                 if (response.isSuccessful()) {
                     session.setToken(response.body().getEmail());
-                    session.setAccountId(Integer.parseInt(response.body().getId()));
+                    session.setAccountId(response.body().getId());
                     Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
                     startActivity(intent);
                     finish();

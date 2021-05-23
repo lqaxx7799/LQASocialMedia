@@ -4,11 +4,12 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Account implements Serializable {
     @SerializedName("id")
     @Expose
-    private String id;
+    private int id;
     @SerializedName("email")
     @Expose
     private String email;
@@ -27,12 +28,18 @@ public class Account implements Serializable {
     @SerializedName("profilePictureUrl")
     @Expose
     private String profilePictureUrl;
+    @SerializedName("userFollowings1")
+    @Expose
+    private List<UserFollowing> userFollowings1;
+    @SerializedName("userFollowings2")
+    @Expose
+    private List<UserFollowing> userFollowings2;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -82,5 +89,21 @@ public class Account implements Serializable {
 
     public void setProfilePictureUrl(String profilePictureUrl) {
         this.profilePictureUrl = profilePictureUrl;
+    }
+
+    public List<UserFollowing> getUserFollowings1() {
+        return userFollowings1;
+    }
+
+    public void setUserFollowings1(List<UserFollowing> userFollowings1) {
+        this.userFollowings1 = userFollowings1;
+    }
+
+    public List<UserFollowing> getUserFollowings2() {
+        return userFollowings2;
+    }
+
+    public void setUserFollowings2(List<UserFollowing> userFollowings2) {
+        this.userFollowings2 = userFollowings2;
     }
 }

@@ -1,66 +1,94 @@
 package com.example.lqasocialmedia.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.lqasocialmedia.R;
+import com.example.lqasocialmedia.activity.AccountListActivity;
+import com.example.lqasocialmedia.adapter.AccountListRecyclerViewAdapter;
+import com.example.lqasocialmedia.model.Account;
+import com.example.lqasocialmedia.network.NetworkProvider;
+import com.example.lqasocialmedia.network.SocialMediaService;
+import com.google.gson.Gson;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeSearchFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class HomeSearchFragment extends Fragment {
+    private EditText txtSearch;
+    private Button btnSearch;
+    private RecyclerView searchListRecyclerView;
+    private AccountListRecyclerViewAdapter accountListRecyclerViewAdapter;
+    private View v;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private SocialMediaService socialMediaService;
 
     public HomeSearchFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeSearchFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeSearchFragment newInstance(String param1, String param2) {
-        HomeSearchFragment fragment = new HomeSearchFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home_search, container, false);
+        v = inflater.inflate(R.layout.fragment_home_search, container, false);
+
+        socialMediaService = NetworkProvider.getInstance().getRetrofit().create(SocialMediaService.class);
+
+        txtSearch = v.findViewById(R.id.txtSearch);
+        btnSearch = v.findViewById(R.id.btnSearch);
+        searchListRecyclerView = v.findViewById(R.id.searchListRecyclerView);
+
+        accountListRecyclerViewAdapter = new AccountListRecyclerViewAdapter(getActivity());
+        searchListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+        searchListRecyclerView.setAdapter(accountListRecyclerViewAdapter);
+
+        accountListRecyclerViewAdapter.setData(new ArrayList<>());
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text = txtSearch.getText().toString();
+                if (text.equals("")) {
+                    accountListRecyclerViewAdapter.setData(new ArrayList<>());
+                    return;
+                }
+                trySearch(text);
+            }
+        });
+
+        return v;
+    }
+
+    private void trySearch(String text) {
+        socialMediaService.getByName(text).enqueue(new Callback<List<Account>>() {
+            @Override
+            public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                accountListRecyclerViewAdapter.setData(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<Account>> call, Throwable t) {
+
+            }
+        });
     }
 }
