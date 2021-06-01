@@ -109,7 +109,10 @@ public class SignUpActivity extends AppCompatActivity {
                 signUpDTO.setReenterPassword(txtReenterPassword.getText().toString());
                 signUpDTO.setUsername(txtUsername.getText().toString());
                 signUpDTO.setProfilePicture(txtProfilePicture.getText().toString());
-
+                boolean isValid = validate(signUpDTO);
+                if (!isValid) {
+                    return;
+                }
                 trySignUp(getSignUpRequestBody(signUpDTO));
             }
         });
@@ -171,7 +174,8 @@ public class SignUpActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         error.append(e.getMessage());
                     }
-                    lblSignUpError.setText(error);
+//                    lblSignUpError.setText(error);
+                    txtEmail.setError(error);
                 }
             }
 
@@ -345,22 +349,61 @@ public class SignUpActivity extends AppCompatActivity {
         return df.format(date);
     }
 
-    public String getPath(Uri uri) {
+    private boolean validate(SignUpDTO signUpDTO) {
+        boolean isValid = true;
+        txtEmail.setError(null);
+        txtPassword.setError(null);
+        txtReenterPassword.setError(null);
+        txtUsername.setError(null);
+        txtName.setError(null);
 
-        String path = null;
-        String[] projection = { MediaStore.Files.FileColumns.DATA };
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-
-        if(cursor == null) {
-            path = uri.getPath();
-        }
-        else{
-            cursor.moveToFirst();
-            int column_index = cursor.getColumnIndexOrThrow(projection[0]);
-            path = cursor.getString(column_index);
-            cursor.close();
+        if (signUpDTO.getEmail().equals("")) {
+            isValid = false;
+            txtEmail.setError("Email is required");
         }
 
-        return ((path == null || path.isEmpty()) ? (uri.getPath()) : path);
+        if (signUpDTO.getPassword().equals("")) {
+            isValid = false;
+            txtPassword.setError("Password is required");
+        }
+
+        if (signUpDTO.getReenterPassword().equals("")) {
+            isValid = false;
+            txtReenterPassword.setError("Reenter password is required");
+        } else if (!signUpDTO.getPassword().equals(signUpDTO.getReenterPassword())) {
+            isValid = false;
+            txtReenterPassword.setError("Password is not matched");
+        }
+
+        if (signUpDTO.getUsername().equals("")) {
+            isValid = false;
+            txtUsername.setError("Username is required");
+        }
+
+        if (signUpDTO.getName().equals("")) {
+            isValid = false;
+            txtName.setError("Name is required");
+        }
+
+        return isValid;
     }
+
+//    public String getPath(Uri uri) {
+//
+//        String path = null;
+//        String[] projection = { MediaStore.Files.FileColumns.DATA };
+//        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+//
+//        if(cursor == null) {
+//            path = uri.getPath();
+//        }
+//        else{
+//            cursor.moveToFirst();
+//            int column_index = cursor.getColumnIndexOrThrow(projection[0]);
+//            path = cursor.getString(column_index);
+//            cursor.close();
+//        }
+//
+//        return ((path == null || path.isEmpty()) ? (uri.getPath()) : path);
+//    }
 }

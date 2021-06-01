@@ -76,6 +76,10 @@ public class CreatePostActivity extends AppCompatActivity {
                 postDTO.setCaption(txtCaption.getText().toString());
                 postDTO.setThumbnail(txtThumbnail.getText().toString());
 
+                boolean isValid = validate(postDTO);
+                if (!isValid) {
+                    return;
+                }
                 tryCreatePost(getPostRequestBody(postDTO));
             }
         });
@@ -246,5 +250,23 @@ public class CreatePostActivity extends AppCompatActivity {
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private boolean validate(PostDTO postDTO) {
+        boolean isValid = true;
+        txtCaption.setError(null);
+        txtThumbnail.setError(null);
+
+        if (postDTO.getCaption().equals("")) {
+            txtCaption.setError("Caption is required");
+            isValid = false;
+        }
+
+        if (postDTO.getThumbnail().equals("")) {
+            txtThumbnail.setError("Thumbnail is required");
+            isValid = false;
+        }
+
+        return isValid;
     }
 }

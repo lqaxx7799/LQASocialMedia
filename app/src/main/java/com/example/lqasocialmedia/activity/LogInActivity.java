@@ -24,6 +24,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LogInActivity extends AppCompatActivity {
+    private static final String LOG_TAG = "LogInActivity";
     private Session session;
 
     private EditText txtEmail, txtPassword;
@@ -72,9 +73,11 @@ public class LogInActivity extends AppCompatActivity {
         String email = txtEmail.getText().toString();
         String password = txtPassword.getText().toString();
         LogInDTO logInDTO = new LogInDTO(email, password);
+        Log.i(LOG_TAG, "start request");
         socialMediaService.logIn(logInDTO).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
+                Log.i(LOG_TAG, "done request");
                 if (response.isSuccessful()) {
                     session.setToken(email);
                     session.setAccountId(Integer.parseInt(response.body()));
@@ -104,7 +107,7 @@ public class LogInActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                Log.i("LogInActivity", t.getMessage());
+                Log.i(LOG_TAG, t.getMessage());
             }
         });
     }

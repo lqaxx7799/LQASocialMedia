@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeAccountFragment extends Fragment {
+    private SwipeRefreshLayout swipeContainer;
     private TextView txtPostCount, txtFollowersCount, txtFollowingCount;
     private ShapeableImageView imgProfilePicture;
     private TextView lblUserName, lblBio;
@@ -77,6 +79,7 @@ public class HomeAccountFragment extends Fragment {
     }
 
     private void initView() {
+        swipeContainer = v.findViewById(R.id.swipeContainer);
         txtPostCount = v.findViewById(R.id.txtPostCount);
         txtFollowersCount = v.findViewById(R.id.txtFollowersCount);
         txtFollowingCount = v.findViewById(R.id.txtFollowingCount);
@@ -114,6 +117,7 @@ public class HomeAccountFragment extends Fragment {
                     String profilePictureUrl = CommonUtils.getImageFullPath(account.getProfilePictureUrl());
                     Glide.with(getActivity()).load(profilePictureUrl).into(imgProfilePicture);
                 }
+                swipeContainer.setRefreshing(false);
             }
 
             @Override
@@ -181,6 +185,13 @@ public class HomeAccountFragment extends Fragment {
     }
 
     private void initListeners() {
-
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // reset state
+                resetData();
+                loadData();
+            }
+        });
     }
 }

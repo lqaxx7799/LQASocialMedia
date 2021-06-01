@@ -1,5 +1,6 @@
 package com.example.lqasocialmedia.network;
 
+import com.example.lqasocialmedia.util.CommonUtils;
 import com.google.gson.GsonBuilder;
 
 import okhttp3.OkHttpClient;
@@ -11,7 +12,7 @@ public final class NetworkProvider {
     private Retrofit retrofit;
     private NetworkProvider() {
         retrofit = new Retrofit.Builder()
-                .baseUrl("https://32605d8cfd5e.ngrok.io")
+                .baseUrl(CommonUtils.API_ROOT)
                 .client(new OkHttpClient.Builder().build())
                 .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().create()))
                 .build();

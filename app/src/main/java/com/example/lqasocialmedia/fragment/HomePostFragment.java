@@ -124,6 +124,9 @@ public class HomePostFragment extends Fragment {
             @Override
             public void onRefresh() {
                 // reset state
+                data.removeAll(data);
+                postRecyclerViewAdapter.notifyDataSetChanged();
+                currentPage = 0;
                 initData();
             }
         });

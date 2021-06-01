@@ -18,12 +18,12 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         session = new Session(this);
 
-        String token = session.getToken();
+        int accountId = session.getAccountId();
 
         new android.os.Handler(Looper.getMainLooper()).postDelayed(
             new Runnable() {
                 public void run() {
-                    if (token.equals("")) {
+                    if (accountId == 0) {
                         // Start login activity
                         startActivity(new Intent(SplashActivity.this, LogInActivity.class));
                     } else {

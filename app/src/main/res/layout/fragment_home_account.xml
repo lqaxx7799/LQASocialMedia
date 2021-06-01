@@ -1,111 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipeContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragment.HomeAccountFragment"
-    android:orientation="vertical">
-
-    <LinearLayout
+    android:layout_height="wrap_content">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="10dp">
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/imgProfilePicture"
-            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-            android:strokeWidth="1"
-            android:layout_height="80dp"
-            android:layout_width="80dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/photo_01"/>
-
-        <LinearLayout
-            android:id="@+id/layoutPosts"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/txtPostCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="20"
-                style="@style/titleLevel1"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Posts"
-                style="@style/textContent"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/layoutFollowers"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/txtFollowersCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="300"
-                style="@style/titleLevel1"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Followers"
-                style="@style/textContent"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/layoutFollowing"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/txtFollowingCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="200"
-                style="@style/titleLevel1"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Following"
-                style="@style/textContent"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".fragment.HomeAccountFragment"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/lblUserName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lam Quoc Anh"
-            style="@style/titleLevel1" />
-        <TextView
-            android:id="@+id/lblBio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="This is qanh99 account"
-            style="@style/textContent" />
-    </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/postGridRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:paddingBottom="60dp"/>
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imgProfilePicture"
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                android:strokeWidth="1"
+                android:layout_height="80dp"
+                android:layout_width="80dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/photo_01"/>
+
+            <LinearLayout
+                android:id="@+id/layoutPosts"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/txtPostCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="20"
+                    style="@style/titleLevel1"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Posts"
+                    style="@style/textContent"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layoutFollowers"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/txtFollowersCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="300"
+                    style="@style/titleLevel1"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Followers"
+                    style="@style/textContent"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layoutFollowing"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/txtFollowingCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="200"
+                    style="@style/titleLevel1"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Following"
+                    style="@style/textContent"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/lblUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lam Quoc Anh"
+                style="@style/titleLevel1" />
+            <TextView
+                android:id="@+id/lblBio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="This is qanh99 account"
+                style="@style/textContent" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/postGridRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingBottom="60dp"/>
+
+    </LinearLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
