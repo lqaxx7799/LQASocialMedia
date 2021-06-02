@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LQASocialMedia">
-        <activity android:name=".activity.CreatePostActivity"></activity>
+        <activity android:name=".activity.PostDetailActivity"></activity>
+        <activity android:name=".activity.CreatePostActivity" />
         <activity android:name=".activity.SignUpActivity" />
         <activity android:name=".activity.AccountListActivity" />
         <activity android:name=".activity.LogInActivity" />

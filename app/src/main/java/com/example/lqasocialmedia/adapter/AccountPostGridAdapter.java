@@ -1,6 +1,7 @@
 package com.example.lqasocialmedia.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.lqasocialmedia.R;
+import com.example.lqasocialmedia.activity.PostDetailActivity;
 import com.example.lqasocialmedia.model.Post;
 import com.example.lqasocialmedia.util.CommonUtils;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -46,6 +49,9 @@ public class AccountPostGridAdapter extends RecyclerView.Adapter<AccountPostGrid
             @Override
             public void onClick(View v) {
                 Toast.makeText(activity, "Clicked on post", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(activity, PostDetailActivity.class);
+                intent.putExtra("post", new Gson().toJson(post));
+                activity.startActivity(intent);
             }
         });
     }
